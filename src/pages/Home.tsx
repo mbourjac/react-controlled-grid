@@ -1,3 +1,10 @@
+import { ControlledGrid } from '../components/ControlledGrid/ControlledGrid';
+import { gridImages } from './Home.constants';
+
 export const Home = () => {
-  return <div>Home</div>;
+  return (
+    <main className="min-h-screen">
+      <ControlledGrid images={gridImages} />
+    </main>
+  );
 };
