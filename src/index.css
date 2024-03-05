@@ -4,8 +4,64 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --range-thumb-size: 1rem;
+  --range-track-height: 0.125rem;
+}
+
 @layer base {
   body {
     @apply font-body;
+  }
+
+  /* Custom range input style */
+  input[type='range'] {
+    -webkit-appearance: none; /* Hide the slider */
+    width: 100%; /* Required for Firefox */
+    height: var(--range-track-height);
+    border-radius: calc(var(--range-track-height) / 2);
+    background: transparent; /* Otherwise white in Chrome */
+
+    &:focus {
+      outline: none;
+    }
+
+    /* Thumb styling for WebKit/Blink */
+    &::-webkit-slider-thumb {
+      @apply range-thumb;
+      -webkit-appearance: none;
+      margin-top: calc(
+        (var(--range-thumb-size) - var(--range-track-height)) / -2
+      ); /* Required for Chrome */
+      transition: 0.2s ease-in-out;
+    }
+
+    /* Thumb styling for Firefox */
+    &::-moz-range-thumb {
+      @apply range-thumb;
+      transition: 0.2s ease-in-out;
+    }
+
+    /* Track styling for WebKit/Blink */
+    &::-webkit-slider-runnable-track {
+      @apply range-track;
+    }
+
+    /* Track styling for Firefox */
+    &::-moz-range-track {
+      @apply range-track;
+    }
+
+    &:focus-visible {
+      /* Focus styling for WebKit/Blink  */
+      &::-webkit-slider-thumb {
+        @apply range-thumb-focus;
+      }
+
+      /* Focus styling for Firefox  */
+      &::-moz-range-thumb {
+        @apply range-thumb-focus;
+      }
+    }
   }
 }
