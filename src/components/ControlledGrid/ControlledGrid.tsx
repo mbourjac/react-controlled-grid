@@ -1,21 +1,18 @@
 import { type ChangeEvent, useState, useCallback } from 'react';
 import { formatToFixedDigits } from '../../helpers/numbers';
 import { usePagination } from '../../hooks/use-pagination';
-import type { GridImage } from '../../pages/Home.types';
+import type { GridConfig, GridImage } from './ControlledGrid.types';
 import { Grid } from './Grid';
 import { Pagination } from './Pagination';
 import { RangeInput } from './RangeInput';
 
 type ControlledGridProps = {
   images: GridImage[];
+  config: GridConfig;
 };
 
-export const ControlledGrid = ({ images }: ControlledGridProps) => {
-  const [gridConfig, setGridConfig] = useState({
-    displayedImagesCount: 20,
-    imagesHeight: 150,
-    gridGap: 5,
-  });
+export const ControlledGrid = ({ images, config }: ControlledGridProps) => {
+  const [gridConfig, setGridConfig] = useState(config);
   const { displayedImagesCount, imagesHeight, gridGap } = gridConfig;
 
   const totalImagesCount = images.length;
