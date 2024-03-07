@@ -13,5 +13,8 @@ export const gridImages: GridImage[] = Object.values(
 export const gridConfig = {
   displayedImagesCount: 20,
   imagesHeight: 150,
+  imagesMaxHeight: 500,
+  imagesAspectRatio: 3 / 4,
+  gridPaddingX: 40,
   gridGap: 5,
 };

@@ -1,6 +1,7 @@
-import { type ChangeEvent, useState, useCallback } from 'react';
+import { type ChangeEvent, useState, useCallback, useEffect } from 'react';
 import { formatToFixedDigits } from '../../helpers/numbers';
 import { usePagination } from '../../hooks/use-pagination';
+import { useWindowSize } from '../../hooks/use-window-size';
 import type { GridConfig, GridImage } from './ControlledGrid.types';
 import { Grid } from './Grid';
 import { Pagination } from './Pagination';
@@ -13,7 +14,18 @@ type ControlledGridProps = {
 
 export const ControlledGrid = ({ images, config }: ControlledGridProps) => {
   const [gridConfig, setGridConfig] = useState(config);
-  const { displayedImagesCount, imagesHeight, gridGap } = gridConfig;
+  const {
+    displayedImagesCount,
+    imagesHeight,
+    imagesMaxHeight,
+    imagesAspectRatio,
+    gridPaddingX,
+    gridGap,
+  } = gridConfig;
+
+  const { windowWidth } = useWindowSize();
+  const maxAvailableWidth = windowWidth - gridPaddingX * 2;
+  const maxAvailableHeight = Math.floor(maxAvailableWidth / imagesAspectRatio);
 
   const totalImagesCount = images.length;
   const {
@@ -38,9 +50,23 @@ export const ControlledGrid = ({ images, config }: ControlledGridProps) => {
     [],
   );
 
+  useEffect(() => {
+    if (maxAvailableHeight < imagesMaxHeight) {
+      setGridConfig((prevGridConfig) => ({
+        ...prevGridConfig,
+        imagesHeight: maxAvailableHeight,
+      }));
+    }
+  }, [maxAvailableHeight, imagesMaxHeight]);
+
   return (
     <section>
-      <div className="sticky top-0 flex flex-col justify-between gap-12 bg-white p-10 md:gap-10 xl:flex-row">
+      <div
+        className="sticky top-0 flex flex-col justify-between gap-12 bg-white md:gap-10 xl:flex-row"
+        style={{
+          padding: `${gridPaddingX / 16}rem`,
+        }}
+      >
         <div className="flex flex-col justify-between gap-x-10 gap-y-6 md:flex-row xl:justify-start">
           <div className="flex gap-10">
             <p>{`${totalImagesCount} image${
@@ -75,7 +101,11 @@ export const ControlledGrid = ({ images, config }: ControlledGridProps) => {
             label={`Height: ${formatToFixedDigits(imagesHeight, 3)} px`}
             value={imagesHeight}
             min={50}
-            max={500}
+            max={
+              maxAvailableHeight < imagesMaxHeight ? maxAvailableHeight : (
+                imagesMaxHeight
+              )
+            }
             handleValueChange={handleInputChange}
           />
           <RangeInput
@@ -92,6 +122,7 @@ export const ControlledGrid = ({ images, config }: ControlledGridProps) => {
         images={displayedImages}
         gap={gridGap.toString()}
         imagesHeight={imagesHeight.toString()}
+        imagesAspectRatio={imagesAspectRatio}
       />
     </section>
   );

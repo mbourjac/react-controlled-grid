@@ -6,5 +6,8 @@ export interface GridImage {
 export interface GridConfig {
   displayedImagesCount: number;
   imagesHeight: number;
+  imagesMaxHeight: number;
+  imagesAspectRatio: number;
+  gridPaddingX: number;
   gridGap: number;
 }
